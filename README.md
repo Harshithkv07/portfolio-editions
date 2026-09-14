@@ -3,10 +3,10 @@
 Each edition of my portfolio site, kept side by side. Every version lives in
 its own folder and runs on its own.
 
-| Folder | Edition |
-|---|---|
-| [`v1/`](v1/) | The first edition: three colours, one typeface and a dithering pipeline. A board of tiles, built with Next.js. |
-| [`v2/`](v2/) | The second edition: a book. A sealed leather cover that burns away, a title page, five chapters and one red ink. |
+| Folder | Edition | Live |
+|---|---|---|
+| [`v1/`](v1/) | The first edition: three colours, one typeface and a dithering pipeline. A board of tiles, built with Next.js. | Not deployed |
+| [`v2/`](v2/) | The second edition: a book. A sealed leather cover that burns away, a title page, five chapters and one red ink. | [harshithkv07.vercel.app](https://harshithkv07.vercel.app) |
 
 ## Looking at a version
 

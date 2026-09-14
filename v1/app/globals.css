@@ -1,0 +1,343 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   DESIGN TOKENS
+   Three colours. That restraint is most of why the reference looks expensive.
+   Do not add a fourth. Dim states are opacity on white, never a new grey.
+   ========================================================================== */
+
+@theme {
+  --color-blue: #0000fd;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-off: #f6f5fc; /* light surface */
+  --color-ink: #010108; /* near-black card surface */
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-card: 28px;
+  --radius-card-lg: 32px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+:root {
+  /* Fluid type. Display sizes stay enormous relative to the viewport on a
+     phone, which is the whole point of the reference. */
+  --step-micro: 0.6875rem;
+  --step-small: clamp(0.8125rem, 0.78rem + 0.16vw, 0.9375rem);
+  --step-body: clamp(0.9375rem, 0.9rem + 0.22vw, 1.0625rem);
+  --step-lead: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  --step-d3: clamp(1.75rem, 1.3rem + 2.2vw, 3rem);
+  --step-d2: clamp(2.25rem, 1.3rem + 4.6vw, 5rem);
+  --step-d1: clamp(2.75rem, 1rem + 8.4vw, 8.5rem);
+  --step-d0: clamp(3.5rem, 0.5rem + 13vw, 13rem);
+
+  /* Scanline period for the ghost-type motif. */
+  --scan-period: 4px;
+  --scan-duty: 2px;
+
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+
+  color-scheme: dark;
+}
+
+/* ============================================================================
+   BASE
+   ========================================================================== */
+
+* {
+  min-width: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: var(--step-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-blue);
+  color: var(--color-white);
+}
+
+/* Legible on black, on white, and on blue — which is why it is belt and
+   braces rather than a single outline. */
+:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--color-blue);
+  border-radius: 2px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ============================================================================
+   TYPOGRAPHY
+   Tracking tightens as size grows. Subtle, and it is most of the "expensive"
+   feeling in the reference.
+   ========================================================================== */
+
+.t-d0 {
+  font-size: var(--step-d0);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+}
+.t-d1 {
+  font-size: var(--step-d1);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+.t-d2 {
+  font-size: var(--step-d2);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+.t-d3 {
+  font-size: var(--step-d3);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+}
+.t-lead {
+  font-size: var(--step-lead);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+.t-body {
+  font-size: var(--step-body);
+  line-height: 1.55;
+}
+.t-small {
+  font-size: var(--step-small);
+  line-height: 1.5;
+}
+
+/* The tiny uppercase technical labels, always in mono. */
+.t-micro {
+  font-family: var(--font-mono);
+  font-size: var(--step-micro);
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* White on black: anything under ~0.45 opacity drops below the 4.5:1 contrast
+   floor for small text. These are the lowest values that still pass. */
+.dim {
+  opacity: 0.6;
+}
+.dimmer {
+  opacity: 0.5;
+}
+
+/* ============================================================================
+   MOTIF 1 — SCANLINE TYPE
+   The half-dissolved ghost type on inactive rows in the reference. Pure CSS
+   mask, so it scales with font-size and costs nothing.
+   ========================================================================== */
+
+.scanline {
+  -webkit-mask-image: repeating-linear-gradient(
+    to bottom,
+    #000 0,
+    #000 var(--scan-duty),
+    transparent var(--scan-duty),
+    transparent var(--scan-period)
+  );
+  mask-image: repeating-linear-gradient(
+    to bottom,
+    #000 0,
+    #000 var(--scan-duty),
+    transparent var(--scan-duty),
+    transparent var(--scan-period)
+  );
+}
+
+/* ============================================================================
+   MOTIF 2 — HALFTONE OVERLAY
+   The regular dot screen over blue panels. Sits in a pseudo-element so it
+   never interferes with text selection or hit targets.
+   ========================================================================== */
+
+.halftone {
+  position: relative;
+  isolation: isolate;
+}
+
+.halftone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.55) 0.9px,
+    transparent 1.1px
+  );
+  background-size: 5px 5px;
+  mix-blend-mode: multiply;
+}
+
+/* Lighter variant for use over photography. */
+.halftone-soft::after {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.32) 0.8px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
+}
+
+/* ============================================================================
+   SURFACES
+   ========================================================================== */
+
+.card {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  position: relative;
+}
+.card-lg {
+  border-radius: var(--radius-card-lg);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.rule-dark {
+  border-top-color: rgba(0, 0, 0, 0.14);
+}
+
+.shell {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ============================================================================
+   REVEAL — the line-mask entrance used across the page.
+   Elements start hidden only when motion is allowed, so a JS failure or a
+   reduced-motion preference can never leave content invisible.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] > .reveal-line > span {
+    display: inline-block;
+    will-change: transform;
+    /* Must clear the padded mask box below, not just its own line box. */
+    transform: translate3d(0, 155%, 0);
+  }
+  [data-reveal="in"] > .reveal-line > span {
+    transform: translate3d(0, 0, 0);
+  }
+  [data-fade] {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+  }
+  [data-fade="in"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Display type runs at line-height well under 1, so glyphs overflow their own
+   line box. The mask has to be padded past that or it shears the descenders
+   off every headline; the negative margins keep the visual rhythm unchanged. */
+.reveal-line {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.1em;
+  margin-top: -0.1em;
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   Nothing pins, nothing animates, everything stays reachable.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   RHYTHM ROW TYPE
+   Sized against viewport height as well as width, because this section is
+   pinned and every row has to fit on screen at once on a short laptop display.
+   ========================================================================== */
+
+.t-row {
+  font-size: clamp(1.75rem, min(6.5vw, 7.2vh), 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+
+/* ============================================================================
+   HUB TILE ENTRANCE
+   The board sits above the fold, so these animate on load rather than on
+   scroll. A CSS animation with a per-tile delay does that with no JavaScript
+   and no wrapper element, which matters because the tiles are grid items and
+   any wrapper would take their place in the grid.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  .tile-in {
+    animation: tile-rise 0.8s var(--ease-out-expo) both;
+  }
+  @keyframes tile-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Decorative watermark numeral on a hub tile. Set through content rather than
+   as a text node so it is treated as the decoration it is. */
+.tile-watermark::before {
+  content: var(--watermark, "");
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.07);
+}

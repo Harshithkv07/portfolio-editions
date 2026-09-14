@@ -5,17 +5,17 @@ its own folder and runs on its own.
 
 | Folder | Edition |
 |---|---|
+| [`v1/`](v1/) | The first edition: three colours, one typeface and a dithering pipeline. A board of tiles, built with Next.js. |
 | [`v2/`](v2/) | The second edition: a book. A sealed leather cover that burns away, a title page, five chapters and one red ink. |
 
 ## Looking at a version
 
-No installs. Open a terminal in the version's folder and run:
+Open a terminal in the version's folder, then:
 
-```bash
-node serve.mjs
-```
-
-Then open **http://localhost:4000**.
+- **v1** is a Next.js app: run `npm install` once, then `npm run dev`, and open
+  **http://localhost:3000**.
+- **v2** needs no installs: run `node serve.mjs` and open
+  **http://localhost:4000**.
 
 ## Putting a version online
 

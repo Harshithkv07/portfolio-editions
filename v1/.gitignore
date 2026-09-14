@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.env*.local
+.shots
+
+# Design reference video — someone else's work, kept on disk only
+reference/

@@ -44,8 +44,8 @@ async function resolveFile(urlPath) {
 }
 
 // Runs a file in api/ the way Vercel does, so the drop box works here too.
-// It reads the same TELEGRAM_* environment variables; without them it
-// answers "not configured", which the page explains politely.
+// It reads the same DISCORD_WEBHOOK_URL environment variable; if that is
+// not set it answers "not configured", which the page explains politely.
 async function runFunction(name, req, res) {
   const file = join(root, "api", name.replace(/[^a-z0-9-]/gi, "") + ".js");
   try {

@@ -409,7 +409,7 @@
   }
 
   /* --- The drop box (contact page) ----------------------------------------- */
-  /* Sends a message to api/drop.js, which relays it to my Telegram. The
+  /* Sends a message to api/drop.js, which relays it to my Discord. The
      replies it can show are written on the form (data-success, data-failure,
      data-offline). Without this script the form still posts, and the
      function sends the reader back here with ?sent or ?unsent.            */

@@ -1,5 +1,5 @@
 # Local tooling and secrets. Never commit these: an .env file could hold the
-# Telegram bot token.
+# Discord webhook address.
 .vercel/
 .env
 .env.*

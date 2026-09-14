@@ -49,8 +49,8 @@ obvious. They never show on the page.
 
 None of it is broken; it is waiting on you.
 
-1. **The drop box** (Contact). Connect it to your Telegram: see "The drop box"
-   below. About five minutes. Until then, sending a message explains that the
+1. **The drop box** (Contact). Connect it to your Discord: see "The drop box"
+   below. About two minutes. Until then, sending a message explains that the
    box is not connected yet and points people to your email.
 2. **Currently** (`about/index.html`). The one dated line on the site.
 3. **The availability line** (`index.html`). "Metanoia is taking on new
@@ -106,30 +106,33 @@ it; to change it, replace both codes (in `href` and in the text) with the new
 address typed normally, or encode it the same way.
 
 **The drop box.** On Contact, a visitor writes a message, adds their name if
-they like, and presses Send; both arrive in your Telegram as one note. Nobody
-gets a reply through it; it only relays to you.
+they like, and presses Send; both arrive as one note in a private channel on
+your Discord, which pings your phone. Nobody gets a reply through it; it only
+relays to you.
 
 The page posts to `api/drop.js`, a tiny function Vercel runs for you. It holds
-the Telegram token, which must never go in the page itself (anyone could read
-it and use your bot). To connect it:
+the channel's webhook address, which must never go in the page itself (anyone
+who has it can post into your channel). To connect it:
 
-1. In Telegram, open **@BotFather**, send `/newbot`, and follow the prompts.
-   It gives you a **bot token**.
-2. Open a chat with your new bot and send it any message, such as "hi".
-3. Find your **chat id**: open
-   `https://api.telegram.org/bot<your token>/getUpdates` in a browser and look
-   for `"chat":{"id":…}`. That number is it.
-4. In Vercel, open the project, then **Settings > Environment Variables**, and
-   add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. Deploy again.
+1. In Discord, make a server just for yourself if you do not have one (the
+   **+** at the bottom of the server list, then **Create My Own**), with a text
+   channel in it, such as `#website`.
+2. Open that channel's settings (the gear beside its name), then
+   **Integrations > Webhooks > New Webhook**, and press **Copy Webhook URL**.
+3. In Vercel, open the project, then **Settings > Environment Variables**, and
+   add `DISCORD_WEBHOOK_URL` with that address. Deploy again.
 
-Never paste the token into any file in this folder. If it ever leaks, send
-`/revoke` to @BotFather and set the new one in Vercel.
+Never paste the webhook address into any file in this folder. If it ever
+leaks, delete the webhook in the channel's settings, make a new one, and set
+the new address in Vercel.
 
 It ignores forms that bots fill in (a hidden field people never see, and a
-check for impossibly fast sending), and caps each message at 2,000 characters.
+check for impossibly fast sending), caps each message at 2,000 characters, and
+shows what visitors type exactly as typed: no formatting, and no pinging
+anyone.
 
-To try it on your own machine, set the same two variables in the terminal
-before `node serve.mjs`; the local server runs the function too.
+To try it on your own machine, set the same variable in the terminal before
+`node serve.mjs`; the local server runs the function too.
 
 **Metanoia and Work.** Professional products (PGPilot, Aero-Logic, Proteus)
 are listed on the Metanoia page. Personal projects and research are plates on
@@ -160,7 +163,7 @@ Use **Vercel**: it serves the pages and also runs `api/drop.js`, the drop box's
 function. This edition lives in the `v2` folder of the repository, so when you
 import the repository in Vercel, set **Root Directory** to `v2`. (Or, in this
 folder, run `npx vercel`, accept the defaults, then `npx vercel --prod`.) Set
-the two Telegram variables first (see "The drop box").
+`DISCORD_WEBHOOK_URL` first (see "The drop box").
 
 Any static host (Netlify Drop, GitHub Pages) can serve the pages, but not the
 drop box function, so the box would only ever say it is not connected.

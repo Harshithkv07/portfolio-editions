@@ -1195,7 +1195,7 @@ a:focus-visible .leader::after {
 }
 
 /* The drop box: a message, an optional name and a Send button, relayed to
-   Telegram by api/drop.js. */
+   Discord by api/drop.js. */
 .dropbox {
   margin: 2.5rem 0 0;
 }

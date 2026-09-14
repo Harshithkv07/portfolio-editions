@@ -1,0 +1,8 @@
+# Local tooling and secrets. Never commit these: an .env file could hold the
+# Telegram bot token.
+.vercel/
+.env
+.env.*
+node_modules/
+.DS_Store
+Thumbs.db

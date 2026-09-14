@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" data-mode="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Harshith K V</title>
+  <meta name="description" content="Start a project with Metanoia, or just say hello.">
+  <meta name="theme-color" content="#121010">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact — Harshith K V">
+  <meta property="og:description" content="Start a project with Metanoia, or just say hello.">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=IM+Fell+English+SC&display=swap">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <script>try{var m=localStorage.getItem("mode");if(m)document.documentElement.dataset.mode=m}catch(e){}function vt(e){if(e.viewTransition)e.viewTransition.ready.catch(function(){})}addEventListener("pageswap",vt);addEventListener("pagereveal",vt)</script>
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#text">Skip to text</a>
+
+  <div class="book">
+    <nav class="running-head" aria-label="Book">
+      <a href="../">&lsaquo; Contents</a>
+      <span>Harshith K V</span>
+    </nav>
+
+    <header class="chapter-head">
+      <p class="chapter-num"><span class="visually-hidden">Chapter </span>IV</p>
+      <h1 class="chapter-title">Contact</h1>
+      <p class="chapter-sub">Start a project, or just say hello.</p>
+      <svg class="fleuron" viewBox="0 0 120 12" aria-hidden="true"><path d="M0 6h46M74 6h46" stroke="currentColor" vector-effect="non-scaling-stroke"/><circle cx="50.5" cy="6" r="1.5" fill="currentColor"/><circle cx="69.5" cy="6" r="1.5" fill="currentColor"/><path d="M60 1.2 64.8 6 60 10.8 55.2 6Z" fill="currentColor"/></svg>
+    </header>
+
+    <main id="text" class="prose contact">
+      <p class="statement">Metanoia is taking on new projects, and I&rsquo;m always up for working with good people on interesting problems.</p>
+
+      <!-- THE DROP BOX. A thought about the site or a quick question, relayed
+           straight to my Telegram by api/drop.js (a small function Vercel runs,
+           which keeps the Telegram token secret). Setup is in the README.
+           Until the token is set, sending explains that the box is not
+           connected yet. -->
+      <form class="dropbox" id="dropbox" action="/api/drop" method="POST" data-dropbox
+            aria-labelledby="dropbox-title"
+            data-success="Thank you. Your message is on its way."
+            data-failure="That did not go through. Try again in a moment, or email me."
+            data-offline="The drop box is not connected yet. Please email me instead.">
+        <h2 class="ruled" id="dropbox-title">Drop a Message</h2>
+        <p class="dropbox-intro">Thoughts on the site, or a quick question. It comes straight to me.</p>
+        <label class="visually-hidden" for="drop-message">Your message</label>
+        <textarea id="drop-message" name="message" rows="4" maxlength="2000" required placeholder="Write your message&hellip;"></textarea>
+        <div class="dropbox-row">
+          <label class="visually-hidden" for="drop-name">Your name (optional)</label>
+          <input id="drop-name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="Your name (optional)">
+          <button type="submit">Send&nbsp;&rsaquo;</button>
+        </div>
+        <p class="dropbox-status" role="status" data-status></p>
+
+        <!-- Left empty by people; bots tend to fill it in. -->
+        <div class="visually-hidden" aria-hidden="true">
+          <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+      </form>
+
+      <!-- REACH ME. Each line is a name, a dot leader and the address.
+           A line whose href is left empty is hidden, so an unfinished one
+           never shows. The email is written as character codes so simple
+           scrapers miss it; browsers show it normally. -->
+      <section class="elsewhere" aria-labelledby="elsewhere-title">
+        <h2 class="ruled" id="elsewhere-title">Reach Me</h2>
+        <ul>
+          <li><a href="mailto:&#104;&#97;&#114;&#115;&#104;&#105;&#116;&#104;&#107;&#118;&#50;&#48;&#48;&#55;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;"><span class="ch-label">Email</span><span class="leader" aria-hidden="true"></span><span class="ch-value">&#104;&#97;&#114;&#115;&#104;&#105;&#116;&#104;&#107;&#118;&#50;&#48;&#48;&#55;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</span></a></li>
+          <li><a href="https://www.instagram.com/harsh._.xxo/"><span class="ch-label">Instagram</span><span class="leader" aria-hidden="true"></span><span class="ch-value">@harsh._.xxo</span></a></li>
+          <li><a href="https://github.com/Harshithkv07"><span class="ch-label">GitHub</span><span class="leader" aria-hidden="true"></span><span class="ch-value">Harshithkv07</span></a></li>
+          <li><a href="https://www.linkedin.com/in/harshith-kv-103b52375"><span class="ch-label">LinkedIn</span><span class="leader" aria-hidden="true"></span><span class="ch-value">harshith-kv</span></a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="page-foot">
+      <div class="imprint">
+        <a class="edition" href="../colophon/" title="About this edition">v. II</a>
+        <button class="mode-toggle" type="button" data-mode-toggle>
+          <span class="to-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg></span>
+          <span class="to-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.8A8 8 0 0 1 9.2 4.5a8 8 0 1 0 10.3 10.3Z"/></svg></span>
+          <span class="mode-label"><span class="to-light">Read by daylight</span><span class="to-dark">Read by candlelight</span></span>
+        </button>
+      </div>
+    </footer>
+  </div>
+  <!-- Chapter tabs on the right edge (wide screens). Outside .book, so
+       they stay still while the page stretches. -->
+  <nav class="thumb-index" aria-label="Chapters">
+    <a href="../about/"><span class="tab-name">About</span><span class="tab-num" aria-hidden="true">I</span></a>
+    <a href="../metanoia/"><span class="tab-name">Metanoia</span><span class="tab-num" aria-hidden="true">II</span></a>
+    <a href="../work/"><span class="tab-name">Work</span><span class="tab-num" aria-hidden="true">III</span></a>
+    <a href="../contact/" aria-current="page"><span class="tab-name">Contact</span><span class="tab-num" aria-hidden="true">IV</span></a>
+    <a href="../colophon/"><span class="tab-name">Colophon</span><span class="tab-num" aria-hidden="true">V</span></a>
+  </nav>
+</body>
+</html>

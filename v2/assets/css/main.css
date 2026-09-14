@@ -1,0 +1,1704 @@
+/* ============================================================================
+   Harshith K V — v. II
+
+   One ink, one paper, and a page that stretches when you pull on it.
+
+   Colours live in the first block below. Change --ink and --paper and the
+   whole book follows. --rubric is the colour of titles, numerals and
+   initials; on every page but one it is simply the ink.
+   ========================================================================== */
+
+/* --- Ink and paper -------------------------------------------------------- */
+
+:root {
+  /* Candlelight — the default. */
+  --paper: #121010;
+  --ink: #ff4d3d;
+  --rubric: #ff4d3d;
+  --rule: color-mix(in srgb, var(--ink) 42%, transparent);
+  --grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 .92  4.2 0 0 0 -2.35'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  --grain-strength: 0.2;
+  --shade: radial-gradient(ellipse 90% 75% at 50% 38%, transparent 45%, rgb(0 0 0 / 0.55) 100%);
+
+  /* One family throughout: the Fell types, cut in the 1600s. Small capitals
+     for titles, contents and labels; the sturdier DW Pica for reading.
+     Neither comes in bold, so nothing on the site asks for bold. */
+  --display: "IM Fell English SC", Georgia, serif;
+  --text: "IM Fell DW Pica", Georgia, serif;
+  --caps: "IM Fell English SC", Georgia, serif;
+
+  --measure: 35rem;
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+
+  color-scheme: dark;
+}
+
+/* Daylight — the same red, deepened onto parchment. */
+:root[data-mode="light"] {
+  --paper: #efe4cf;
+  --ink: #a8231a;
+  --rubric: #a8231a;
+  --grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .14  0 0 0 0 .05  4 0 0 0 -2.2'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  --grain-strength: 0.28;
+  --shade: radial-gradient(ellipse 90% 75% at 50% 38%, transparent 50%, rgb(110 70 25 / 0.2) 100%);
+  color-scheme: light;
+}
+
+/* The one chapter printed the other way: by daylight when the rest of the
+   book is by candlelight, and the reverse. Its titles stay red; its text
+   is plain ink, so the page reads calm rather than loud. */
+:root.inverse {
+  --paper: #efe4cf;
+  --ink: #2b1d16;
+  --rubric: #a8231a;
+  --grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .14  0 0 0 0 .05  4 0 0 0 -2.2'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  --grain-strength: 0.28;
+  --shade: radial-gradient(ellipse 90% 75% at 50% 38%, transparent 50%, rgb(110 70 25 / 0.2) 100%);
+  color-scheme: light;
+}
+:root.inverse[data-mode="light"] {
+  --paper: #121010;
+  --ink: #e9dfcc;
+  --rubric: #ff4d3d;
+  --grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 .92  4.2 0 0 0 -2.35'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  --grain-strength: 0.2;
+  --shade: radial-gradient(ellipse 90% 75% at 50% 38%, transparent 45%, rgb(0 0 0 / 0.55) 100%);
+  color-scheme: dark;
+}
+
+/* --- Base ----------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  overflow-x: clip;
+  background: var(--paper);
+  font-family: var(--text);
+  font-size: clamp(1.125rem, 1.02rem + 0.42vw, 1.3rem);
+  line-height: 1.6;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Grain and shade sit above everything and never catch a click.
+   They are outside .book, so the paper stays still while the ink stretches. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+body::before {
+  background: var(--shade);
+}
+body::after {
+  background-image: var(--grain);
+  opacity: var(--grain-strength);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 1.5px solid currentColor;
+  outline-offset: 4px;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 60;
+  padding: 0.5rem 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--caps);
+  text-decoration: none;
+}
+.skip:focus {
+  top: 1rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- The book: the thing that stretches ----------------------------------- */
+
+.book {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding: clamp(1.25rem, 4vh, 2.25rem) var(--gutter) 2rem;
+  transform: scaleX(var(--stretch, 1));
+  /* Springs back past where it started, then settles.
+     The first line is for older browsers that do not know linear(). */
+  transition: transform 0.7s cubic-bezier(0.3, 1.6, 0.5, 1);
+  transition: transform 1s
+    linear(0, 0.25 5%, 0.62 10%, 0.92 15%, 1.1 20%, 1.17 25%, 1.15 30%, 1.08 35%, 1.01 40%, 0.97 45%, 0.955 50%, 0.96 55%, 0.98 60%, 1.005 70%, 1.008 80%, 1);
+}
+.book.is-pulled {
+  transition: none;
+  will-change: transform;
+}
+
+/* --- Ornaments ------------------------------------------------------------ */
+
+.fleuron {
+  display: block;
+  width: 7.5rem;
+  height: auto;
+  margin: 1.5rem auto 0;
+  overflow: visible;
+}
+
+/* A ruled label with a line either side: — Contents — */
+.ruled {
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  font-family: var(--caps);
+  font-size: 0.8em;
+  font-weight: normal;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.ruled::before,
+.ruled::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* Dot leaders — the dotted line that runs from a name to its number. */
+.leader {
+  flex: 1;
+  position: relative;
+  min-width: 1.5em;
+  height: 0.3em;
+}
+.leader::before,
+.leader::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0.12em;
+}
+.leader::before {
+  height: 0.14em;
+  background: radial-gradient(circle closest-side, currentColor 72%, transparent 100%) 0 0 / 0.52em 100% repeat-x;
+  transition: opacity 0.3s ease;
+}
+.leader::after {
+  height: 1px;
+  bottom: 0.18em;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* Point at a link with a leader and the dots are inked in as one line. */
+a:focus-visible .leader::before {
+  opacity: 0;
+}
+a:focus-visible .leader::after {
+  transform: scaleX(1);
+}
+/* Hover effects are kept to devices that can hover: on a touch screen a
+   tap leaves :hover stuck on after the finger lifts. */
+@media (hover: hover) {
+  a:hover .leader::before {
+    opacity: 0;
+  }
+  a:hover .leader::after {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Rubrics ----------------------------------------------------------------
+   Titles, numerals, initials and ornaments are printed in the rubric colour.
+   On every page but Metanoia that is the same red as the text. */
+
+.name,
+.chapter-num,
+.chapter-title,
+.wordmark,
+.plate-title,
+.fleuron,
+.ruled,
+.services li::before {
+  color: var(--rubric);
+}
+
+/* --- Title page (home) ---------------------------------------------------- */
+
+.home .book {
+  justify-content: center;
+}
+
+.title-page {
+  text-align: center;
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: 0 auto;
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: clamp(2.8rem, 15vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+/* "K · V" set between two double rules, as wide as the name above it. */
+.name-initials {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin-top: 0.14em;
+  font-size: 0.56em;
+}
+.name-initials::before,
+.name-initials::after {
+  content: "";
+  flex: 1;
+  height: 0.16em;
+  border-block: max(1.5px, 0.035em) solid currentColor;
+}
+.name-initials span {
+  font-size: 0.6em;
+}
+
+.tagline {
+  margin: 1rem 0 0;
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.55rem);
+  line-height: 1.3;
+}
+.tagline i {
+  padding-inline: 0.05em;
+}
+
+/* --- Contents ------------------------------------------------------------- */
+
+.contents {
+  width: 100%;
+  max-width: 29rem;
+  margin: clamp(2rem, 6vh, 3.25rem) auto 0;
+}
+.contents h2 {
+  margin: 0 0 0.8rem;
+  font-weight: normal;
+}
+.contents ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contents a {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  padding: 0.4em 0;
+  font-family: var(--caps);
+  font-size: 1.12em;
+  letter-spacing: 0.035em;
+  text-decoration: none;
+}
+.contents .num {
+  min-width: 2.6ch;
+  text-align: right;
+}
+.contents a:focus-visible {
+  outline-offset: 2px;
+}
+
+/* "Metanoia is taking on new projects." under the contents. */
+.availability {
+  margin: 1.75rem 0 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 1rem;
+}
+.availability a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .availability a:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+/* --- Imprint: version number and the light switch ------------------------- */
+
+.imprint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem 1.4rem;
+  margin-top: clamp(2.5rem, 7vh, 4rem);
+  font-size: 0.95rem;
+}
+.edition {
+  font-family: var(--caps);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .edition:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.35em 0.5em;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: italic 1em/1.2 var(--text);
+  cursor: pointer;
+}
+.mode-toggle svg {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  transition: transform 0.6s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@media (hover: hover) {
+  .mode-toggle:hover svg {
+    transform: rotate(-20deg) scale(1.1);
+  }
+  .mode-toggle:hover .mode-label {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+/* Show the mode you would switch to. */
+[data-mode="light"] .to-light,
+:root:not([data-mode="light"]) .to-dark {
+  display: none;
+}
+
+/* --- Chapter pages -------------------------------------------------------- */
+
+.running-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 44rem;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--caps);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+.running-head a {
+  text-decoration: none;
+}
+/* Links that stand on a line of their own get a finger-sized hit area
+   (at least 24px tall) without moving anything: the margin takes the
+   padding back. */
+.running-head a,
+.plate p > a:only-child,
+.torn a {
+  padding-block: 0.4rem;
+  margin-block: -0.4rem;
+}
+@media (hover: hover) {
+  .running-head a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.chapter-head {
+  margin: clamp(2.5rem, 8vh, 4.5rem) 0 clamp(2rem, 5vh, 3rem);
+  text-align: center;
+}
+.chapter-num {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: 0.12em;
+}
+.chapter-title {
+  margin: 0.25em 0 0;
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: clamp(2.3rem, 9vw, 4.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.chapter-sub {
+  margin: 0.6em 0 0;
+  font-style: italic;
+  font-size: 1.12em;
+}
+
+.prose {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+.prose p {
+  margin: 0 0 1em;
+}
+.prose a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+@media (hover: hover) {
+  .prose a:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+.prose::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* An initial cut out of a block of ink. */
+.lead::first-letter {
+  float: left;
+  margin: 0.08em 0.14em 0 0;
+  padding: 0.1em 0.12em 0.04em;
+  background: var(--rubric);
+  color: var(--paper);
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: 3.45em;
+  line-height: 0.8;
+}
+
+.statement {
+  margin: 0 0 1.2em;
+  font-size: clamp(1.45rem, 1.1rem + 1.4vw, 2rem);
+  line-height: 1.25;
+  font-style: italic;
+  text-wrap: balance;
+}
+
+/* --- The foot of the page -------------------------------------------------
+   A single rule, then the edition and the daylight/candlelight switch. */
+
+.page-foot {
+  margin-top: auto;
+  padding-top: clamp(3.5rem, 9vh, 6rem);
+}
+.page-foot .imprint {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* --- Chapter tabs -----------------------------------------------------------
+   Cut into the right edge of the page like a dictionary's thumb index. They
+   sit outside .book, so they stay put while the page stretches. Wide screens
+   only; on smaller ones the running head and the page foot do this job. */
+
+.thumb-index {
+  display: none;
+}
+@media (min-width: 64rem) {
+  /* Room on both sides of the page, so the text never runs up to the tabs. */
+  body:has(> .thumb-index) .book {
+    padding-inline: calc(var(--gutter) + 3rem);
+  }
+  .thumb-index {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    transform: translateY(-50%);
+  }
+}
+.thumb-index a {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-right: 0;
+  background: var(--paper);
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.tab-num {
+  min-width: 3ch;
+  color: var(--rubric);
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: 0.85rem;
+  text-align: center;
+}
+/* The chapter's name slides out when the tab is pointed at or focused. */
+.tab-name {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 0.35s ease, margin 0.35s ease;
+}
+.thumb-index a:focus-visible .tab-name {
+  max-width: 8rem;
+  margin-right: 0.6rem;
+}
+@media (hover: hover) {
+  .thumb-index a:hover .tab-name {
+    max-width: 8rem;
+    margin-right: 0.6rem;
+  }
+}
+.thumb-index a:focus-visible {
+  outline-offset: -4px;
+}
+.thumb-index [aria-current="page"] {
+  border-color: var(--rubric);
+  background: var(--rubric);
+  color: var(--paper);
+}
+.thumb-index [aria-current="page"] .tab-num {
+  color: inherit;
+}
+
+/* --- About: an open book --------------------------------------------------
+   Two facing pages on wide screens: the portrait with the Particulars
+   beneath it on the left, the story on the right, a spine between them.
+   On narrower screens the pages stack as portrait, story, facts, which is
+   also the order they come in the HTML. */
+
+.about .running-head,
+.about .page-foot .imprint {
+  max-width: 54rem;
+}
+
+.spread-page {
+  width: 100%;
+  max-width: 54rem;
+  margin: 0 auto;
+}
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "portrait"
+    "story"
+    "facts";
+  row-gap: 2.25rem;
+}
+.spread .portrait {
+  grid-area: portrait;
+}
+.spread .recto {
+  grid-area: story;
+  max-width: none;
+}
+.spread .particulars {
+  grid-area: facts;
+}
+
+@media (min-width: 52rem) {
+  .spread {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-areas:
+      "portrait story"
+      "facts story";
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(1.75rem, 3.5vw, 2.75rem);
+  }
+  .spread .portrait {
+    width: min(100%, 19rem);
+  }
+  /* The spine. */
+  .spread .recto {
+    padding-left: clamp(1.75rem, 3.5vw, 2.75rem);
+    border-left: 1px solid var(--rule);
+  }
+}
+
+.portrait {
+  width: min(100%, 17rem);
+  margin: 0 auto;
+}
+.frame {
+  padding: 5px;
+  border: 1px solid var(--ink);
+}
+.portrait figcaption {
+  margin-top: 0.5em;
+  font-size: 0.82em;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Photographs are printed in the page's ink: black stays black, light
+   becomes red. In daylight, dark becomes red and light becomes paper. */
+.inked {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+}
+.inked img {
+  display: block;
+  width: 100%;
+  filter: grayscale(1) contrast(1.15);
+  mix-blend-mode: multiply;
+}
+.inked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Fine engraved lines across the plate. */
+  background: repeating-linear-gradient(0deg, transparent 0 2px, rgb(0 0 0 / 0.28) 2px 3px);
+  mix-blend-mode: multiply;
+}
+:root[data-mode="light"] .inked {
+  background: var(--paper);
+}
+:root[data-mode="light"] .inked::after {
+  background: var(--ink);
+  mix-blend-mode: screen;
+}
+
+.particulars {
+  margin: 0;
+}
+.particulars h2 {
+  margin: 0 0 0.6rem;
+  font-weight: normal;
+}
+.particulars dl {
+  margin: 0;
+}
+.particulars div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  padding: 0.25em 0;
+}
+.particulars dt {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 0.55em;
+  font-family: var(--caps);
+  letter-spacing: 0.03em;
+}
+/* The same dot leader as the contents, drawn on the term itself so the
+   list stays valid HTML. */
+.particulars dt::after {
+  content: "";
+  flex: 1;
+  min-width: 1.5em;
+  height: 0.3em;
+  background: radial-gradient(circle closest-side, currentColor 72%, transparent 100%) 0 calc(100% - 0.12em) / 0.52em 0.14em repeat-x;
+}
+.particulars dd {
+  margin: 0;
+  text-align: right;
+}
+
+.marginalia {
+  margin: 2.5rem 0 0;
+  padding: 1.1rem 0.5rem;
+  border-block: 3px double var(--ink);
+  text-align: center;
+  font-style: italic;
+}
+.marginalia strong {
+  display: block;
+  margin-bottom: 0.2em;
+  font-family: var(--caps);
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0.12em;
+  font-size: 0.85em;
+}
+.marginalia p {
+  margin: 0;
+}
+
+/* Tools of the trade: five columns under the spread, set out like a table
+   in a book, one item to a line. Three columns on tablets, two on phones. */
+.tools {
+  margin: clamp(3rem, 7vw, 4.5rem) 0 0;
+}
+.tools h2 {
+  margin: 0 0 1.25rem;
+}
+.tools dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem clamp(1rem, 2.5vw, 1.75rem);
+  margin: 0;
+}
+@media (min-width: 40rem) {
+  .tools dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Each column is at least as wide as its longest item, so nothing breaks
+   mid-name; whatever room is left is shared out equally. */
+@media (min-width: 60rem) {
+  .tools dl {
+    grid-template-columns: repeat(5, minmax(max-content, 1fr));
+  }
+}
+.tools dt {
+  margin-bottom: 0.45rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--rubric);
+  font-family: var(--caps);
+  letter-spacing: 0.08em;
+}
+.tools dd {
+  margin: 0;
+  line-height: 1.5;
+}
+.tools abbr {
+  text-decoration: none;
+  cursor: help;
+}
+
+/* --- Index lists ------------------------------------------------------------
+   A name, a dot leader, and a number or year, with one line underneath.
+   Used for the minor works on Work and the products on Metanoia. */
+
+.index-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.index-list li {
+  padding: 0.55rem 0;
+}
+.index-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  font-family: var(--caps);
+  font-size: 1.08em;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+}
+.index-row > :last-child {
+  white-space: nowrap;
+}
+.index-list p {
+  margin: 0.1em 0 0;
+  font-style: italic;
+  font-size: 0.95em;
+}
+
+/* --- Work: plates --------------------------------------------------------- */
+
+/* Products, Research, Index: each part opens with a ruled label. */
+.work-part + .work-part {
+  margin-top: clamp(4rem, 10vw, 5.5rem);
+}
+.work-part > h2 {
+  margin: 0 0 2rem;
+}
+
+.plates {
+  display: grid;
+  gap: clamp(3rem, 8vw, 4.5rem);
+}
+.plate h3 {
+  margin: 0;
+}
+/* Every plate is a solid block of ink with the lettering cut out of it.
+   --plate is its colour; patterns and clearings below borrow it. */
+.plate-art {
+  --plate: var(--ink);
+  position: relative;
+  display: grid;
+  place-content: center;
+  aspect-ratio: 3 / 2;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--ink);
+  outline: 1px solid var(--paper);
+  outline-offset: -9px;
+  background-color: var(--plate);
+  color: var(--paper);
+  text-align: center;
+}
+/* Small lozenges at the middle of the top and bottom rules. */
+.plate-art::before,
+.plate-art::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  transform: translateX(-50%) rotate(45deg);
+}
+.plate-art::before {
+  top: -5px;
+}
+.plate-art::after {
+  bottom: -5px;
+}
+.plate-art .plate-title {
+  color: inherit;
+}
+/* The opposite, if a plate ever wants it: outlined on bare paper. */
+.plate-art.is-inverse {
+  --plate: var(--paper);
+  color: var(--ink);
+  outline-color: var(--ink);
+}
+.plate-art.is-inverse .plate-title {
+  color: var(--rubric);
+}
+.plate-num {
+  font-family: var(--caps);
+  letter-spacing: 0.25em;
+  font-size: 0.9em;
+}
+.plate-title {
+  display: block;
+  margin: 0.2em 0 0.25em;
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: clamp(1.9rem, 7.5vw, 3.3rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+/* A bracketed note after a plate's title, e.g. "(SaaS)": smaller, and in
+   its own case, so the small capitals read SaaS rather than SAAS. */
+.plate-note {
+  font-size: 0.45em;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  vertical-align: 0.35em;
+}
+.plate-kind {
+  margin: 0;
+  font-style: italic;
+}
+.plate-caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.1rem 1rem;
+  margin: 1rem 0 0.9rem;
+  font-family: var(--caps);
+  font-size: 0.95em;
+  letter-spacing: 0.05em;
+}
+/* The year or status never breaks; on narrow screens it drops below,
+   still set to the right. */
+.plate-caption > :last-child {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.plate p {
+  margin: 0 0 0.6em;
+}
+
+/* A plate with a picture in it: the image sits inside the double frame,
+   with the title engraved underneath. */
+.plate-art.has-image {
+  display: grid;
+  gap: 1.25rem;
+  place-content: stretch;
+  aspect-ratio: auto;
+  padding: 18px 18px 1.6rem;
+}
+.plate-art.has-image .inked {
+  border: 0;
+}
+/* Screenshots of dark interfaces print almost black; lift them first. */
+.plate-art.has-image .inked img:not(.true-colour) {
+  filter: grayscale(1) contrast(1.1) brightness(1.8);
+}
+/* Printed in ink until you point at it, then shown in true colour. */
+.inked .true-colour {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: none;
+  mix-blend-mode: normal;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.plate:focus-within .true-colour {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .plate-art:hover .true-colour {
+    opacity: 1;
+  }
+}
+
+/* Research plate: scattered specks, like particles in glass. */
+/* Patterns are drawn in the plate's lettering colour, faintly, so they read
+   on a solid plate. */
+.plate-art.scatter {
+  /* Five dot grids at spacings that never line up read as a random scatter. */
+  --dot: radial-gradient(circle, color-mix(in srgb, currentColor 40%, transparent) 1.1px, transparent 1.6px);
+  background-image: var(--dot), var(--dot), var(--dot), var(--dot), var(--dot);
+  background-position: 0 0, 7px 11px, 13px 5px, 3px 19px, 23px 2px;
+  background-size: 19px 23px, 29px 17px, 37px 31px, 43px 41px, 53px 47px;
+}
+/* Faint horizontal layers, like the coats of a thermal barrier. */
+.plate-art.strata {
+  background-image: repeating-linear-gradient(180deg, transparent 0 11px, color-mix(in srgb, currentColor 35%, transparent) 11px 12px);
+}
+/* On patterned plates the title sits in a clearing of the plate's colour. */
+.plate-art.scatter > *,
+.plate-art.strata > * {
+  position: relative;
+  background: var(--plate);
+  box-shadow: 0 0 1.25rem 1rem var(--plate);
+}
+
+/* Ride the Markets: a stock chart drawn as a hill, with a bike on it. */
+.plate-art.has-ridge {
+  place-content: start center;
+  padding-top: clamp(1.75rem, 6vw, 2.75rem);
+}
+.ridge {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  width: calc(100% - 20px);
+  height: 46%;
+  overflow: visible;
+}
+.ridge .area {
+  fill: color-mix(in srgb, currentColor 15%, transparent);
+}
+.ridge .line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+@media (max-width: 30rem) {
+  .plate-art.has-ridge {
+    aspect-ratio: 4 / 3;
+  }
+}
+.ridge .bike {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* --- Metanoia ------------------------------------------------------------- */
+
+.wordmark {
+  margin: 0.15em 0 0;
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: clamp(2.6rem, 13vw, 7.5rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.definition {
+  margin: 1rem 0 0;
+  font-style: italic;
+  font-size: 1.1em;
+}
+.definition dfn {
+  font-style: normal;
+  font-family: var(--caps);
+  letter-spacing: 0.04em;
+}
+.definition abbr {
+  text-decoration: none;
+}
+.metanoia {
+  text-align: center;
+}
+/* The motto: Latin set like an inscription, the English beneath it. */
+.motto {
+  margin: 0 0 2rem;
+}
+.prose .motto-latin {
+  margin: 0;
+  font-family: var(--caps);
+  font-size: clamp(1.6rem, 1.1rem + 2vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+}
+.prose .motto-english {
+  margin: 0.35em 0 0;
+  font-style: italic;
+  font-size: 1.05em;
+}
+.metanoia section {
+  margin-top: 3rem;
+}
+.metanoia section > h2 {
+  margin: 0 0 1rem;
+}
+.metanoia .index-list {
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+/* What it makes: numbered i, ii, iii, one line each. */
+.services {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  counter-reset: service;
+}
+.services li {
+  padding: 1.1rem 0;
+  counter-increment: service;
+}
+.services li + li {
+  border-top: 1px solid var(--rule);
+}
+.services li::before {
+  content: counter(service, lower-roman) ".";
+  display: block;
+  font-family: var(--display);
+  font-weight: normal;
+  font-size: 0.95em;
+  letter-spacing: 0.1em;
+}
+.services h3 {
+  margin: 0.1em 0 0.15em;
+  font-family: var(--caps);
+  font-weight: normal;
+  font-size: 1.5em;
+  letter-spacing: 0.06em;
+}
+.services p {
+  margin: 0;
+  font-style: italic;
+  text-wrap: balance;
+}
+
+/* A quiet line under the button, like a note at the foot of a page. */
+.metanoia .tally {
+  margin: 1rem 0 0;
+  font-style: italic;
+  font-size: 0.95em;
+}
+
+/* A bordered link that fills with ink when pointed at. */
+.prose .cta {
+  margin: 3rem 0 0;
+  text-align: center;
+}
+.cta a {
+  display: inline-block;
+  padding: 0.6em 1.3em;
+  border: 1px solid currentColor;
+  color: var(--rubric);
+  font-family: var(--caps);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+/* The button always reads as two lines: the question, then the answer. */
+.cta a {
+  line-height: 1.45;
+}
+.cta a span {
+  display: block;
+}
+/* The smallest phones: a little less padding and spacing, so each phrase
+   still fits on its one line. */
+@media (max-width: 22.5rem) {
+  .cta a {
+    padding-inline: 0.8em;
+    letter-spacing: 0.03em;
+  }
+}
+.cta a:focus-visible {
+  border-color: var(--rubric);
+  background: var(--rubric);
+  color: var(--paper);
+}
+@media (hover: hover) {
+  .cta a:hover {
+    border-color: var(--rubric);
+    background: var(--rubric);
+    color: var(--paper);
+  }
+}
+
+/* --- Contact ----------------------------------------------------------------- */
+
+.contact .statement {
+  text-align: center;
+}
+
+/* The drop box: a message, an optional name and a Send button, relayed to
+   Telegram by api/drop.js. */
+.dropbox {
+  margin: 2.5rem 0 0;
+}
+.dropbox h2 {
+  margin: 0 0 0.6rem;
+}
+.dropbox .dropbox-intro {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-style: italic;
+}
+.dropbox textarea,
+.dropbox input {
+  display: block;
+  width: 100%;
+  padding: 0.6em 0.75em;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.dropbox textarea {
+  min-height: 7.5em;
+  resize: vertical;
+  line-height: 1.5;
+}
+.dropbox input {
+  font-style: italic;
+}
+.dropbox textarea:focus-visible,
+.dropbox input:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.dropbox ::placeholder {
+  color: inherit;
+  opacity: 0.55;
+}
+.dropbox-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.dropbox-row input {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 30rem) {
+  .dropbox-row {
+    flex-direction: column;
+  }
+}
+.dropbox button[type="submit"] {
+  padding: 0.55em 1.3em;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font: 1.05rem var(--caps);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.dropbox button[type="submit"]:focus-visible {
+  background: transparent;
+  color: var(--ink);
+}
+@media (hover: hover) {
+  .dropbox button[type="submit"]:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+}
+.dropbox button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+/* A reply line that takes no room until it has something to say. It stays
+   in the page, so screen readers still hear it when it fills in. */
+.dropbox .dropbox-status {
+  margin: 0.6rem 0 0;
+  text-align: center;
+  font-style: italic;
+}
+.dropbox .dropbox-status:empty {
+  margin: 0;
+}
+
+
+.elsewhere {
+  margin: 2rem 0 0;
+}
+.elsewhere h2 {
+  margin: 0 0 0.6rem;
+  font-weight: normal;
+}
+/* Each way to reach me: its name, a dot leader, then the address itself.
+   On narrow screens a long address drops to its own line, set right. */
+.elsewhere ul {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.elsewhere a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.55em;
+  padding: 0.45em 0;
+  text-decoration: none;
+}
+.elsewhere .ch-label {
+  font-family: var(--caps);
+  font-size: 1.05em;
+  letter-spacing: 0.04em;
+}
+.elsewhere .ch-value {
+  margin-left: auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.elsewhere a:focus-visible .ch-value {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+@media (hover: hover) {
+  .elsewhere a:hover .ch-value {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+/* Links you have not filled in yet are left out. */
+.elsewhere li:has(a[href=""]),
+.elsewhere:not(:has(a:not([href=""]))) {
+  display: none;
+}
+
+
+/* --- Colophon ------------------------------------------------------------- */
+
+.colophon {
+  text-align: center;
+}
+.colophon p {
+  text-wrap: pretty;
+}
+.colophon h2 {
+  margin: 2rem 0 0.3rem;
+  font-family: var(--caps);
+  font-weight: normal;
+  font-size: 0.9em;
+  letter-spacing: 0.18em;
+}
+.colophon .intro {
+  font-size: 1.15em;
+  font-style: italic;
+}
+/* A tailpiece: lines that narrow to a point, as old books ended. */
+.tailpiece {
+  margin: 3rem auto 0;
+  font-family: var(--caps);
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+.tailpiece span {
+  display: block;
+}
+.tailpiece .fleuron {
+  width: 1.1rem;
+  margin-top: 0.75rem;
+}
+
+/* --- Page torn out (404) -------------------------------------------------- */
+
+.torn {
+  margin: 0 auto;
+  text-align: center;
+}
+.torn .chapter-title {
+  font-size: clamp(2rem, 8vw, 3.6rem);
+}
+
+/* --- Motion --------------------------------------------------------------- */
+
+/* Pages turn with a short crossfade in browsers that support it. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+}
+
+/* On paper: black ink, no grain, nothing that only works on a screen. */
+@media print {
+  :root,
+  :root[data-mode="light"],
+  :root.inverse,
+  :root.inverse[data-mode="light"] {
+    --paper: #fff;
+    --ink: #000;
+  }
+  body::before,
+  body::after,
+  .skip,
+  .mode-toggle,
+  .thumb-index {
+    display: none;
+  }
+  .book {
+    min-height: 0;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* --- The cover: the home page's opening ------------------------------------
+   On a first visit the book is closed: a leather cover with its title in
+   red, a tooled frame and a wax seal. Breaking the seal cracks it; the cover
+   catches where the seal was and burns away, leaving the title page. It
+   shows only while <html> has class="closed", which the script in
+   index.html's <head> adds once per browser tab. The burn is the #burn
+   filter in index.html, moved along by main.js. The colours are the cover's
+   own: the book looks the same closed whatever the reading light. */
+
+.opening {
+  display: none;
+}
+:root.closed {
+  overflow: hidden;
+}
+:root.closed .opening {
+  --leather: #1a1112;
+  --gilt: #ff4d3d;
+  --inset: clamp(0.9rem, 3.2vw, 2.25rem);
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: block;
+  transition: opacity 0.4s ease;
+  /* On touch screens: no grey flash over the whole cover when it is
+     tapped, and no double-tap zoom. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.opening.is-done {
+  opacity: 0;
+}
+
+/* The board. */
+.cover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: clamp(1.6rem, 5vh, 2.6rem);
+  padding: 2rem;
+  background:
+    radial-gradient(ellipse 65% 55% at 50% 42%, rgb(255 77 61 / 0.08), transparent 70%),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='l' x='0' y='0' width='1' height='1'><feTurbulence type='fractalNoise' baseFrequency='.014 .022' numOctaves='5' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .07  0 0 0 0 .03  0 0 0 0 .03  0 0 0 1.2 -.4'/></filter><rect width='100%' height='100%' filter='url(%23l)'/></svg>"),
+    var(--leather);
+  color: var(--gilt);
+  text-align: center;
+  cursor: pointer;
+}
+.opening.is-burning .cover {
+  filter: url(#burn);
+}
+/* The shadow along the spine. */
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: clamp(14px, 2.2vw, 28px);
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0.15) 55%, rgb(255 120 100 / 0.08) 75%, transparent);
+}
+
+/* Embers rising off the burning edge, drawn by main.js. */
+.embers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* The tooled frame, pressed into the leather from the middle outwards. */
+.cover-frame {
+  position: absolute;
+  inset: var(--inset);
+  border: 1px solid rgb(255 77 61 / 0.55);
+  outline: 1px solid rgb(255 77 61 / 0.35);
+  outline-offset: -8px;
+  pointer-events: none;
+  animation: cover-tool 1.4s 0.15s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes cover-tool {
+  from {
+    opacity: 0;
+    clip-path: inset(50% 50% 50% 50%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* The title, inked in as if the ink were still settling. */
+.cover-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 8.6vw, 5.4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.75), 0 0 1.2rem rgb(255 77 61 / 0.25);
+  animation: cover-ink 1.4s 0.55s ease-out both;
+}
+/* "and His", small, between double rules like the K · V of the title page. */
+.cover-and {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: 0.6em;
+  margin: 0.5em 0 0.4em;
+  font-size: 0.36em;
+  letter-spacing: 0.12em;
+  text-transform: none;
+}
+.cover-and::before,
+.cover-and::after {
+  content: "";
+  flex: 1;
+  height: 0.3em;
+  border-block: max(1.5px, 0.07em) solid currentColor;
+}
+@keyframes cover-ink {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+/* The wax seal: stamped down, then gently glowing until someone breaks it.
+   It is drawn once (#seal-art) and shown twice, each copy clipped to one
+   side of a jagged crack, so the two halves can fall apart. The left copy
+   reaches a hair past the crack, so no seam shows while it is whole. */
+.cover-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.seal {
+  position: relative;
+  width: clamp(92px, 21vw, 132px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.65));
+  animation:
+    seal-set 0.75s 1.35s cubic-bezier(0.3, 1.5, 0.5, 1) both,
+    seal-glow 3.2s 2.4s ease-in-out infinite;
+}
+@keyframes seal-set {
+  from {
+    opacity: 0;
+    transform: scale(1.4) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes seal-glow {
+  50% {
+    filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.65)) drop-shadow(0 0 16px rgb(255 77 61 / 0.4));
+  }
+}
+.seal:focus-visible {
+  outline: 1.5px solid var(--gilt);
+  outline-offset: 10px;
+}
+.seal-half {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1), opacity 0.6s ease, filter 0.2s ease;
+}
+.seal-half svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (hover: hover) {
+  .seal:hover .seal-half {
+    filter: brightness(1.12);
+  }
+}
+.seal-left {
+  clip-path: polygon(0 0, 54.5% 0, 50.5% 14%, 57.5% 29%, 48.5% 45%, 56.5% 60%, 47.5% 76%, 53.5% 90%, 50.5% 100%, 0 100%);
+}
+.seal-right {
+  clip-path: polygon(53% 0, 100% 0, 100% 100%, 49% 100%, 52% 90%, 46% 76%, 55% 60%, 47% 45%, 56% 29%, 49% 14%);
+}
+.opening.is-opening .seal {
+  animation: none;
+}
+.opening.is-opening .seal-left {
+  transform: translate(-22%, 12%) rotate(-20deg);
+  opacity: 0;
+}
+.opening.is-opening .seal-right {
+  transform: translate(22%, 16%) rotate(16deg);
+  opacity: 0;
+}
+
+.seal-hint,
+.cover-edition {
+  margin: 0;
+  font-family: var(--caps);
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  animation: cover-fade 0.9s 2s ease-out both;
+}
+.cover-edition {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--inset) + 1.1rem);
+  left: 0;
+  font-size: 0.8rem;
+  animation-delay: 1s;
+}
+.opening.is-opening .seal-hint {
+  animation: none;
+  opacity: 0;
+}
+@keyframes cover-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* On a phone held sideways there is no room to stack them: the title goes
+   on the left and the seal, with its hint, on the right. */
+@media (orientation: landscape) and (max-height: 33rem) {
+  .cover {
+    grid-template-columns: auto auto;
+    align-items: center;
+    column-gap: clamp(2rem, 8vw, 5rem);
+    row-gap: 0.8rem;
+    padding-block: 1rem;
+  }
+  .cover-title {
+    grid-row: span 2;
+    font-size: clamp(1.8rem, 11vh, 3.4rem);
+  }
+  .seal {
+    align-self: end;
+    width: clamp(72px, 24vh, 110px);
+  }
+  .seal-hint {
+    align-self: start;
+  }
+  .cover-edition {
+    bottom: calc(var(--inset) + 0.6rem);
+  }
+}
+
+@media print {
+  :root.closed {
+    overflow: visible;
+  }
+  :root.closed .opening {
+    display: none;
+  }
+}

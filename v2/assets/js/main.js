@@ -408,6 +408,94 @@
     }).observe(root);
   }
 
+  /* --- The portrait gallery (about page) ------------------------------------ */
+  /* The portraits take turns in the frame, and the caption counts them as
+     plates (Plate I, II, III). A diamond under the caption stands for each;
+     choosing one shows that plate and stops the turning, so a reader can
+     look. The turning pauses while the pointer rests on the portrait, while
+     it is scrolled out of sight or the tab is hidden, and never starts for
+     anyone who asks for less motion. Without this script the first portrait
+     simply stays.                                                           */
+
+  const gallery = document.querySelector("[data-gallery]");
+  const slides = gallery ? [...gallery.children] : [];
+  if (slides.length > 1) {
+    const GALLERY_MS = 1700; // how long each portrait stays
+    const figure = gallery.closest("figure");
+    const numeral = figure.querySelector("[data-plate]");
+    const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+    let current = 0;
+    let stopped = calm.matches;
+    let onScreen = !("IntersectionObserver" in window);
+    let resting = false;
+    let timer;
+
+    const picker = document.createElement("div");
+    picker.className = "plate-picker";
+    picker.setAttribute("role", "group");
+    picker.setAttribute("aria-label", "Portraits");
+    const buttons = slides.map((_, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("aria-label", `Plate ${roman[index]}`);
+      button.addEventListener("click", () => {
+        stopped = true;
+        clearTimeout(timer);
+        show(index);
+      });
+      picker.append(button);
+      return button;
+    });
+    figure.append(picker);
+
+    const show = (index) => {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("is-shown", i === current);
+        if (i === current) slide.removeAttribute("aria-hidden");
+        else slide.setAttribute("aria-hidden", "true");
+      });
+      buttons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === current)));
+      if (numeral) numeral.textContent = roman[current] ?? String(current + 1);
+    };
+
+    const turn = () => {
+      clearTimeout(timer);
+      if (stopped || resting || !onScreen || document.hidden) return;
+      timer = setTimeout(() => {
+        // On a slow connection, wait for the next portrait to arrive rather
+        // than fade to an empty plate.
+        const next = slides[(current + 1) % slides.length].querySelector("img");
+        if (next && !next.complete) {
+          next.addEventListener("load", turn, { once: true });
+          next.addEventListener("error", turn, { once: true });
+          return;
+        }
+        show(current + 1);
+        turn();
+      }, GALLERY_MS);
+    };
+
+    show(0);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([entry]) => {
+        onScreen = entry.isIntersecting;
+        turn();
+      }).observe(gallery);
+    }
+    document.addEventListener("visibilitychange", turn);
+    gallery.addEventListener("pointerenter", (event) => {
+      if (event.pointerType !== "mouse") return;
+      resting = true;
+      turn();
+    });
+    gallery.addEventListener("pointerleave", () => {
+      resting = false;
+      turn();
+    });
+    turn();
+  }
+
   /* --- The drop box (contact page) ----------------------------------------- */
   /* Sends a message to api/drop.js, which relays it to my Discord. The
      replies it can show are written on the form (data-success, data-failure,

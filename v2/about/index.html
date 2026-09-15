@@ -37,14 +37,23 @@
            the left-hand page, the story on the right, with a spine between.
            On a phone the pages stack in reading order: portrait, story, facts. -->
       <div class="spread">
-        <!-- To change the photo: save a new one as assets/img/portrait.jpg
-             (portrait shape, about 4:5). It is printed in the page's ink
-             automatically. -->
+        <!-- The portraits take turns in the frame, one every 1.7 seconds (the
+             pace is GALLERY_MS in assets/js/main.js), and the caption counts
+             them as plates. Each is a photo in assets/img/ (portrait shape,
+             4:5), printed in the page's ink automatically. To add one, copy
+             a <div class="inked"> line; to remove one, delete its line. The
+             first is the one shown without JavaScript, and to anyone whose
+             device asks for less motion. -->
         <figure class="portrait">
           <div class="frame">
-            <div class="inked"><img src="../assets/img/portrait.jpg" width="595" height="744" alt="Harshith K V"></div>
+            <div class="gallery" data-gallery>
+              <div class="inked is-shown"><img src="../assets/img/portrait.jpg" width="595" height="744" alt="Harshith K V"></div>
+              <div class="inked" aria-hidden="true"><img src="../assets/img/portrait-2.jpg" width="600" height="750" alt="Harshith K V" decoding="async"></div>
+              <div class="inked" aria-hidden="true"><img src="../assets/img/portrait-3.jpg" width="720" height="900" alt="Harshith K V" decoding="async"></div>
+              <div class="inked" aria-hidden="true"><img src="../assets/img/portrait-4.jpg" width="720" height="900" alt="Harshith K V" decoding="async"></div>
+            </div>
           </div>
-          <figcaption>Plate I. The author.</figcaption>
+          <figcaption>Plate <span data-plate>I</span>. The author.</figcaption>
         </figure>
 
         <div class="recto prose">

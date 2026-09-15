@@ -712,6 +712,55 @@ a:focus-visible .leader::after {
   mix-blend-mode: screen;
 }
 
+/* The portrait gallery: the plates share one frame and take turns, each
+   printed on its own so the fade between them stays clean (main.js).
+   Without JavaScript only the first one shows. */
+.gallery {
+  display: grid;
+}
+.gallery > .inked {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.gallery > .inked.is-shown {
+  opacity: 1;
+}
+.gallery img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+/* A diamond for each plate under the caption; the filled one is showing.
+   Choosing one shows that plate and stops the turning. */
+.plate-picker {
+  display: flex;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-top: 0.1rem;
+}
+.plate-picker button {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--rubric);
+  cursor: pointer;
+}
+.plate-picker button::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border: 1px solid currentColor;
+  transform: rotate(45deg);
+  transition: background-color 0.25s ease;
+}
+.plate-picker button[aria-pressed="true"]::before {
+  background: currentColor;
+}
+
 .particulars {
   margin: 0;
 }

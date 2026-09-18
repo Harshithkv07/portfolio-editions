@@ -1475,6 +1475,71 @@ a:focus-visible .leader::after {
   }
 }
 
+/* --- Arriving from an app's own browser ------------------------------------
+   A line at the foot for readers who come in through Instagram and the like,
+   offering the way out to their own browser. It is built by main.js only in
+   those browsers, so this styling is otherwise unused. It sits above the
+   cover and the grain, and the book makes room for it. */
+
+.outside {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.7rem;
+  padding: 0.7rem 2.6rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--caps);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+  text-align: center;
+}
+:root.has-outside .book {
+  padding-bottom: 7rem;
+}
+.outside p {
+  margin: 0;
+  max-width: 24rem;
+}
+.outside .go,
+.outside .copy {
+  padding: 0.5em 1em;
+  border: 1px solid var(--ink);
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.outside .go {
+  background: var(--ink);
+  color: var(--paper);
+}
+.outside .copy {
+  border-color: var(--rule);
+  background: none;
+  color: inherit;
+}
+.outside .shut {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.35rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 1.1rem/1 var(--caps);
+  cursor: pointer;
+}
+
 /* --- The cover: the home page's opening ------------------------------------
    On a first visit the book is closed: a leather cover with its title in
    red, a tooled frame and a wax seal. Breaking the seal cracks it; the cover

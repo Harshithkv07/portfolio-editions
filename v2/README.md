@@ -142,6 +142,14 @@ the Work page, each linking to its code or live demo.
 Work plate with `class="plate-art has-image"` holds a screenshot that turns
 true colour when pointed at; `assets/img/work-pgpilot.jpg` is kept for that.
 
+**Coming in from Instagram.** Instagram, Facebook, Threads, Snapchat,
+LinkedIn and the like open links in a browser of their own, which is cramped
+and slower. Readers arriving that way get a line at the foot of the page
+offering their own browser instead: on Android it hands over directly, on
+iPhones it asks Safari to take it, and there is a Copy link button if neither
+works. Nobody else ever sees it, and closing it keeps it closed. It is the
+last part of `assets/js/main.js`; the app list lives there too.
+
 **Page turns.** Moving between pages fades softly in browsers that support it
 (Chrome, Edge, Safari). Others just change page.
 

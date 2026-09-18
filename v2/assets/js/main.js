@@ -540,4 +540,101 @@
       }
     });
   }
+
+  /* --- Arriving from an app's own browser ----------------------------------- */
+  /* Instagram and the like open links in a little browser of their own, where
+     the book has less room and less of its machinery. A line at the foot
+     offers the way out: a link (Android hands over through intent:, iPhones
+     through x-safari-), the address to copy if that does nothing, and a hint
+     at the app's own menu. It is built only when that is where we are, and
+     only until the reader closes it.                                        */
+
+  const apps = [
+    [/Instagram/i, "Instagram"],
+    [/Threads/i, "Threads"],
+    [/FBAN|FBAV|FB_IAB|Messenger/i, "Facebook"],
+    [/Snapchat/i, "Snapchat"],
+    [/TikTok|musical_ly|BytedanceWebview/i, "TikTok"],
+    [/LinkedInApp/i, "LinkedIn"],
+    [/Twitter/i, "X"],
+    [/Pinterest/i, "Pinterest"],
+    [/WhatsApp/i, "WhatsApp"],
+    [/MicroMessenger/i, "WeChat"],
+    [/KAKAOTALK/i, "KakaoTalk"],
+    [/Line\//i, "LINE"],
+  ];
+  const app = apps.find(([mark]) => mark.test(navigator.userAgent))?.[1];
+  let noteClosed = false;
+  try {
+    noteClosed = sessionStorage.getItem("outside") === "1";
+  } catch {}
+
+  if (app && !noteClosed) {
+    const apple = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    const note = document.createElement("aside");
+    note.className = "outside";
+    note.setAttribute("aria-label", "Opening this page in your own browser");
+
+    const words = document.createElement("p");
+    words.textContent = `Reading inside ${app}. The book opens better in your own browser.`;
+
+    // A real link, not a script hop: these apps often refuse the second.
+    const away = document.createElement("a");
+    away.className = "go";
+    away.textContent = "Open in browser ›";
+    away.href = apple
+      ? `x-safari-${location.href}`
+      : `intent://${location.host}${location.pathname}${location.search}#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(location.href)};end`;
+    away.addEventListener("click", () => {
+      // If we are still here a moment later, the hand-over was refused.
+      setTimeout(() => {
+        if (document.visibilityState !== "visible") return;
+        words.textContent = apple
+          ? "Still here? Tap the ⋯ button at the top, then Open in external browser."
+          : "Still here? Tap the ⋮ button at the top, then Open in browser.";
+      }, 1400);
+    });
+
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "copy";
+    copy.textContent = "Copy link";
+    copy.addEventListener("click", async () => {
+      const said = (text) => {
+        copy.textContent = text;
+        setTimeout(() => (copy.textContent = "Copy link"), 2500);
+      };
+      try {
+        await navigator.clipboard.writeText(location.href);
+        said("Link copied");
+      } catch {
+        // Older app browsers: copy the old way, from a field off the page.
+        const field = document.createElement("input");
+        field.value = location.href;
+        field.setAttribute("aria-hidden", "true");
+        field.style.cssText = "position:fixed;top:-5rem;opacity:0";
+        document.body.append(field);
+        field.select();
+        said(document.execCommand("copy") ? "Link copied" : location.href);
+        field.remove();
+      }
+    });
+
+    const shut = document.createElement("button");
+    shut.type = "button";
+    shut.className = "shut";
+    shut.setAttribute("aria-label", "Close this note");
+    shut.textContent = "×";
+    shut.addEventListener("click", () => {
+      try {
+        sessionStorage.setItem("outside", "1");
+      } catch {}
+      note.remove();
+      root.classList.remove("has-outside");
+    });
+
+    note.append(words, away, copy, shut);
+    document.body.append(note);
+    root.classList.add("has-outside");
+  }
 })();

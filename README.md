@@ -6,7 +6,7 @@ its own folder and runs on its own.
 | Folder | Edition | Live |
 |---|---|---|
 | [`v1/`](v1/) | The first edition: three colours, one typeface and a dithering pipeline. A board of tiles, built with Next.js. | Not deployed |
-| [`v2/`](v2/) | The second edition: a book. A sealed leather cover that burns away, a title page, five chapters and one red ink. | [harshithkv07.vercel.app](https://harshithkv07.vercel.app) |
+| [`v2/`](v2/) | The second edition: a book. A sealed leather cover that burns away, a title page, four chapters and one red ink. | [harshithkv07.vercel.app](https://harshithkv07.vercel.app) |
 
 ## Looking at a version
 

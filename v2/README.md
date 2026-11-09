@@ -2,7 +2,7 @@
 
 The second edition of the site. The first was three colours, one typeface and a
 dithering pipeline. This one is a **book**: a sealed leather cover that burns
-away, a title page, a table of contents, five chapters, one red ink, and a page
+away, a title page, a table of contents, four chapters, one red ink, and a page
 that stretches when you pull on the edge of the window.
 
 Built after the idea behind [lynnandtonic.com](https://lynnandtonic.com) (a
@@ -34,10 +34,9 @@ browser is what is in the file. Open it, change the text, save, refresh.
 |---|---|
 | Title page and contents | `index.html` |
 | I. About | `about/index.html` |
-| II. Metanoia | `metanoia/index.html` |
-| III. Work | `work/index.html` |
-| IV. Contact | `contact/index.html` |
-| V. Colophon | `colophon/index.html` |
+| II. Work | `work/index.html` |
+| III. Contact | `contact/index.html` |
+| IV. Colophon | `colophon/index.html` |
 | Page not found | `404.html` |
 
 Comments in the files (`<!-- like this -->`) explain the parts that are not
@@ -53,8 +52,8 @@ None of it is broken; it is waiting on you.
    below. About two minutes. Until then, sending a message explains that the
    box is not connected yet and points people to your email.
 2. **Currently** (`about/index.html`). The one dated line on the site.
-3. **The availability line** (`index.html`). "Metanoia is taking on new
-   projects." Change or delete it when that stops being true.
+3. **The availability line** (`index.html`). "Available for select projects &
+   research." Change or delete it when that stops being true.
 
 Everything else comes from your résumé and your project READMEs. Read it once
 and correct anything that is not quite right.
@@ -65,9 +64,8 @@ and correct anything that is not quite right.
 
 **Colours.** The first block of `assets/css/main.css`. `--paper` and `--ink`
 are the whole palette, and `--rubric` is the colour of titles, numerals and
-initials. There is a set for candlelight (the default), one for daylight
-(parchment), and one for Metanoia, which is printed the other way round:
-parchment with dark text and red titles while the rest of the book is dark.
+initials. There is a set for candlelight (the default) and one for daylight
+(parchment).
 
 **Type.** One family, the IM Fell types: IM Fell English small capitals for
 titles, the contents, labels and navigation, and IM Fell DW Pica for
@@ -134,9 +132,8 @@ anyone.
 To try it on your own machine, set the same variable in the terminal before
 `node serve.mjs`; the local server runs the function too.
 
-**Metanoia and Work.** Professional products (PGPilot, Aero-Logic, Proteus)
-are listed on the Metanoia page. Personal projects and research are plates on
-the Work page, each linking to its code or live demo.
+**Work.** Projects and research are plates on the Work page, each linking to its
+code or live demo.
 
 **Pictures.** Photos are printed in the page's ink by the `.inked` style. A
 Work plate with `class="plate-art has-image"` holds a screenshot that turns

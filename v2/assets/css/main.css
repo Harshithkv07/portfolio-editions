@@ -44,28 +44,6 @@
   color-scheme: light;
 }
 
-/* The one chapter printed the other way: by daylight when the rest of the
-   book is by candlelight, and the reverse. Its titles stay red; its text
-   is plain ink, so the page reads calm rather than loud. */
-:root.inverse {
-  --paper: #efe4cf;
-  --ink: #2b1d16;
-  --rubric: #a8231a;
-  --grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .14  0 0 0 0 .05  4 0 0 0 -2.2'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
-  --grain-strength: 0.28;
-  --shade: radial-gradient(ellipse 90% 75% at 50% 38%, transparent 50%, rgb(110 70 25 / 0.2) 100%);
-  color-scheme: light;
-}
-:root.inverse[data-mode="light"] {
-  --paper: #121010;
-  --ink: #e9dfcc;
-  --rubric: #ff4d3d;
-  --grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 .92  4.2 0 0 0 -2.35'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
-  --grain-strength: 0.2;
-  --shade: radial-gradient(ellipse 90% 75% at 50% 38%, transparent 45%, rgb(0 0 0 / 0.55) 100%);
-  color-scheme: dark;
-}
-
 /* --- Base ----------------------------------------------------------------- */
 
 *,
@@ -249,17 +227,14 @@ a:focus-visible .leader::after {
 }
 
 /* --- Rubrics ----------------------------------------------------------------
-   Titles, numerals, initials and ornaments are printed in the rubric colour.
-   On every page but Metanoia that is the same red as the text. */
+   Titles, numerals, initials and ornaments are printed in the rubric colour. */
 
 .name,
 .chapter-num,
 .chapter-title,
-.wordmark,
 .plate-title,
 .fleuron,
-.ruled,
-.services li::before {
+.ruled {
   color: var(--rubric);
 }
 
@@ -348,7 +323,7 @@ a:focus-visible .leader::after {
   outline-offset: 2px;
 }
 
-/* "Metanoia is taking on new projects." under the contents. */
+/* Availability line under the contents. */
 .availability {
   margin: 1.75rem 0 0;
   text-align: center;
@@ -864,7 +839,7 @@ a:focus-visible .leader::after {
 
 /* --- Index lists ------------------------------------------------------------
    A name, a dot leader, and a number or year, with one line underneath.
-   Used for the minor works on Work and the products on Metanoia. */
+   Used for minor works on Work. */
 
 .index-list {
   margin: 0;
@@ -1098,145 +1073,6 @@ a:focus-visible .leader::after {
   stroke-linejoin: round;
 }
 
-/* --- Metanoia ------------------------------------------------------------- */
-
-.wordmark {
-  margin: 0.15em 0 0;
-  font-family: var(--display);
-  font-weight: normal;
-  font-size: clamp(2.6rem, 13vw, 7.5rem);
-  line-height: 0.95;
-  text-transform: uppercase;
-}
-.definition {
-  margin: 1rem 0 0;
-  font-style: italic;
-  font-size: 1.1em;
-}
-.definition dfn {
-  font-style: normal;
-  font-family: var(--caps);
-  letter-spacing: 0.04em;
-}
-.definition abbr {
-  text-decoration: none;
-}
-.metanoia {
-  text-align: center;
-}
-/* The motto: Latin set like an inscription, the English beneath it. */
-.motto {
-  margin: 0 0 2rem;
-}
-.prose .motto-latin {
-  margin: 0;
-  font-family: var(--caps);
-  font-size: clamp(1.6rem, 1.1rem + 2vw, 2.4rem);
-  line-height: 1.2;
-  letter-spacing: 0.06em;
-}
-.prose .motto-english {
-  margin: 0.35em 0 0;
-  font-style: italic;
-  font-size: 1.05em;
-}
-.metanoia section {
-  margin-top: 3rem;
-}
-.metanoia section > h2 {
-  margin: 0 0 1rem;
-}
-.metanoia .index-list {
-  max-width: 28rem;
-  margin: 0 auto;
-}
-
-/* What it makes: numbered i, ii, iii, one line each. */
-.services {
-  max-width: 30rem;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
-  counter-reset: service;
-}
-.services li {
-  padding: 1.1rem 0;
-  counter-increment: service;
-}
-.services li + li {
-  border-top: 1px solid var(--rule);
-}
-.services li::before {
-  content: counter(service, lower-roman) ".";
-  display: block;
-  font-family: var(--display);
-  font-weight: normal;
-  font-size: 0.95em;
-  letter-spacing: 0.1em;
-}
-.services h3 {
-  margin: 0.1em 0 0.15em;
-  font-family: var(--caps);
-  font-weight: normal;
-  font-size: 1.5em;
-  letter-spacing: 0.06em;
-}
-.services p {
-  margin: 0;
-  font-style: italic;
-  text-wrap: balance;
-}
-
-/* A quiet line under the button, like a note at the foot of a page. */
-.metanoia .tally {
-  margin: 1rem 0 0;
-  font-style: italic;
-  font-size: 0.95em;
-}
-
-/* A bordered link that fills with ink when pointed at. */
-.prose .cta {
-  margin: 3rem 0 0;
-  text-align: center;
-}
-.cta a {
-  display: inline-block;
-  padding: 0.6em 1.3em;
-  border: 1px solid currentColor;
-  color: var(--rubric);
-  font-family: var(--caps);
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-/* The button always reads as two lines: the question, then the answer. */
-.cta a {
-  line-height: 1.45;
-}
-.cta a span {
-  display: block;
-}
-/* The smallest phones: a little less padding and spacing, so each phrase
-   still fits on its one line. */
-@media (max-width: 22.5rem) {
-  .cta a {
-    padding-inline: 0.8em;
-    letter-spacing: 0.03em;
-  }
-}
-.cta a:focus-visible {
-  border-color: var(--rubric);
-  background: var(--rubric);
-  color: var(--paper);
-}
-@media (hover: hover) {
-  .cta a:hover {
-    border-color: var(--rubric);
-    background: var(--rubric);
-    color: var(--paper);
-  }
-}
-
 /* --- Contact ----------------------------------------------------------------- */
 
 .contact .statement {
@@ -1444,9 +1280,7 @@ a:focus-visible .leader::after {
 /* On paper: black ink, no grain, nothing that only works on a screen. */
 @media print {
   :root,
-  :root[data-mode="light"],
-  :root.inverse,
-  :root.inverse[data-mode="light"] {
+  :root[data-mode="light"] {
     --paper: #fff;
     --ink: #000;
   }
